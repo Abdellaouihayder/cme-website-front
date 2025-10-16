@@ -1,6 +1,9 @@
 "use client";
 
 import type React from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
@@ -14,10 +17,15 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Link from "next/link";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import type { UserRole, AccountStatus } from "@/lib/auth-context";
+
+type PendingUser = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: UserRole;
+  status: AccountStatus;
+};
 
 const mockUserDatabase: Record<
   string,
@@ -71,7 +79,8 @@ const mockUserDatabase: Record<
     role: "robotics-head",
     status: "approved",
   },
-  // Test accounts for pending status
+
+  // Pending test accounts
   "pending@cme.tn": {
     firstName: "Pending",
     lastName: "User",
@@ -90,7 +99,8 @@ const mockUserDatabase: Record<
     role: "student",
     status: "pending",
   },
-  // Test accounts for rejected status
+
+  // Rejected test accounts
   "rejected@cme.tn": {
     firstName: "Rejected",
     lastName: "User",
@@ -124,11 +134,11 @@ export default function LoginPage() {
     setTimeout(() => {
       const userFromDb = mockUserDatabase[email];
 
-      // Check if user is in pending users list
-      const pendingUsers = JSON.parse(
+      const pendingUsers: PendingUser[] = JSON.parse(
         localStorage.getItem("cme_pending_users") || "[]"
       );
-      const pendingUser = pendingUsers.find((u: any) => u.email === email);
+
+      const pendingUser = pendingUsers.find((u) => u.email === email);
 
       const mockUser = {
         id: "1",
@@ -148,19 +158,22 @@ export default function LoginPage() {
       } else if (mockUser.status === "rejected") {
         router.push("/rejected");
       } else if (mockUser.status === "approved") {
-        // All these roles should be redirected to admin dashboard
         const adminRoles: UserRole[] = [
           "admin",
           "president",
-          "vice-president",      // Vice-President
-          "events-manager",      // Events & Sponsoring Manager
-          "hr-secretary",        // HR & General Secretary
-          "treasurer",           // CFO
-          "media-manager",       // Media Manager
-          "robotics-head",       // Robotics & Innovation Head
+          "vice-president",
+          "events-manager",
+          "hr-secretary",
+          "treasurer",
+          "media-manager",
+          "robotics-head",
         ];
-        
-        console.log(`[DEBUG] User role: ${mockUser.role}, Is admin: ${adminRoles.includes(mockUser.role)}`);
+
+        console.log(
+          `[DEBUG] User role: ${mockUser.role}, Is admin: ${adminRoles.includes(
+            mockUser.role
+          )}`
+        );
         if (adminRoles.includes(mockUser.role)) {
           router.push("/admin");
         } else {
@@ -232,15 +245,17 @@ export default function LoginPage() {
                 <p>• admin@cme.tn - Administrator</p>
                 <p>• tarek.ajmi@cme.tn - President</p>
                 <p>• amine.kallel@cme.tn - Vice-President</p>
-                <p>• khouloud.bibi@cme.tn - Events & Sponsoring Manager</p>
-                <p>• yosr.gabsi@cme.tn - HR & General Secretary</p>
-                <p>• yahya.merai@cme.tn - Equipment & Treasurer</p>
-                <p>• sawsen.batti@cme.tn - CFO & Media Manager</p>
-                <p>• aziz.saidi@cme.tn - Robotics & Innovation Head</p>
+                <p>• khouloud.bibi@cme.tn - Events &amp; Sponsoring Manager</p>
+                <p>• yosr.gabsi@cme.tn - HR &amp; General Secretary</p>
+                <p>• yahya.merai@cme.tn - Equipment &amp; Treasurer</p>
+                <p>• sawsen.batti@cme.tn - CFO &amp; Media Manager</p>
+                <p>• aziz.saidi@cme.tn - Robotics &amp; Innovation Head</p>
+
                 <p className="font-semibold text-foreground mt-2">
                   Pending Approval:
                 </p>
                 <p>• pending@cme.tn, pending1@cme.tn, pending2@cme.tn</p>
+
                 <p className="font-semibold text-foreground mt-2">
                   Rejected Accounts:
                 </p>

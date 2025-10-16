@@ -45,7 +45,7 @@ export default function ForgotPasswordPage() {
             <CardDescription className="text-center">
               {isSubmitted
                 ? "Check your email for reset instructions"
-                : "Enter your email address and we'll send you a link to reset your password"}
+                : "Enter your email address and we&apos;ll send you a link to reset your password"}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -60,7 +60,7 @@ export default function ForgotPasswordPage() {
                 </Alert>
 
                 <div className="space-y-2 text-sm text-muted-foreground">
-                  <p>Didn't receive the email?</p>
+                  <p>Didn&apos;t receive the email?</p>
                   <ul className="list-disc list-inside space-y-1 ml-2">
                     <li>Check your spam or junk folder</li>
                     <li>Make sure you entered the correct email address</li>
@@ -116,7 +116,7 @@ export default function ForgotPasswordPage() {
             <div className="mt-6 p-4 bg-muted rounded-lg">
               <p className="text-xs font-semibold mb-2">Need help?</p>
               <p className="text-xs text-muted-foreground">
-                If you're having trouble resetting your password, please contact the CME administrators at{" "}
+                If you&apos;re having trouble resetting your password, please contact the CME administrators at{" "}
                 <a href="mailto:admin@cme.tn" className="text-primary hover:underline">
                   admin@cme.tn
                 </a>

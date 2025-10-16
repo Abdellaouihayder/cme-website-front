@@ -24,7 +24,7 @@ export default function AboutPage() {
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto space-y-12">
               <div className="flex justify-center">
-                <Image src="/logo.png" alt="CME Logo" width={600} height={200} className="w-full max-w-2xl h-auto" />
+                <Image src="/cme.jpg" alt="CME Logo" width={600} height={200} className="w-full max-w-2xl h-auto" />
               </div>
 
               <Card>

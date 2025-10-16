@@ -48,7 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(false)
   }, [])
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string) => {
     // Mock login - replace with real authentication later
     const mockUser: User = {
       id: "1",

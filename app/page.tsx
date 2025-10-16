@@ -58,7 +58,7 @@ export default function HomePage() {
     {
       name: "Amine Kallel",
       role: "Vice-President",
-      image: "/professional-male-student.png",
+      image: "/amin.jpg",
       description: "Assists president and coordinates activities",
       linkedin: "https://www.linkedin.com/in/amine-kallel",
     },
@@ -147,7 +147,7 @@ export default function HomePage() {
                     </p>
                     <p>
                       Since <strong className="text-foreground">2010</strong>,
-                      we have been training tomorrow's engineers through
+                      we have been training tomorrow&apos;s engineers through
                       innovative projects in aeronautics, robotics, innovation,
                       and CAD/CAM.
                     </p>
@@ -236,7 +236,7 @@ export default function HomePage() {
                 Our Areas of Excellence
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Since 2010, we have been training tomorrow's engineers in
+                Since 2010, we have been training tomorrow&apos;s engineers in
                 cutting-edge technologies
               </p>
             </div>
@@ -329,50 +329,48 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" >
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {officers.map((officer, index) => (
                 <Card
-                key={index}
-                className="overflow-hidden hover:shadow-lg transition-shadow p-0" // remove extra padding
-              >
-                {/* Remove extra spacing on top */}
-                <div className="relative w-full aspect-[4/3]"> {/* keeps consistent aspect ratio */}
-                  <Image
-                    src={officer.image || "/placeholder.svg"}
-                    alt={officer.name}
-                    fill
-                    className="object-cover object-top" // ensures image sticks to the top
-                  />
-                </div>
-              
-                <CardHeader className="text-center pt-4"> {/* small top padding for text only */}
-                  <CardTitle className="text-lg">{officer.name}</CardTitle>
-                  <div className="text-sm font-semibold text-primary">
-                    {officer.role}
+                  key={index}
+                  className="overflow-hidden hover:shadow-lg transition-shadow p-0"
+                >
+                  <div className="relative w-full aspect-[4/3]">
+                    <Image
+                      src={officer.image || "/placeholder.svg"}
+                      alt={officer.name}
+                      fill
+                      className="object-cover object-top"
+                    />
                   </div>
-                  <CardDescription className="text-xs mt-2">
-                    {officer.description}
-                  </CardDescription>
-              
-                  <div className="mt-4 flex justify-center">
-                    <div className="p-2 bg-white rounded-lg border-2 border-muted">
-                      <Image
-                        src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(
-                          officer.linkedin
-                        )}`}
-                        alt={`${officer.name} LinkedIn QR Code`}
-                        width={100}
-                        height={100}
-                        className="w-24 h-24"
-                      />
+
+                  <CardHeader className="text-center pt-4">
+                    <CardTitle className="text-lg">{officer.name}</CardTitle>
+                    <div className="text-sm font-semibold text-primary">
+                      {officer.role}
                     </div>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    Scan to connect on LinkedIn
-                  </p>
-                </CardHeader>
-              </Card>
-              
+                    <CardDescription className="text-xs mt-2">
+                      {officer.description}
+                    </CardDescription>
+
+                    <div className="mt-4 flex justify-center">
+                      <div className="p-2 bg-white rounded-lg border-2 border-muted">
+                        <Image
+                          src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(
+                            officer.linkedin
+                          )}`}
+                          alt={`${officer.name} LinkedIn QR Code`}
+                          width={100}
+                          height={100}
+                          className="w-24 h-24"
+                        />
+                      </div>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Scan to connect on LinkedIn
+                    </p>
+                  </CardHeader>
+                </Card>
               ))}
             </div>
           </div>

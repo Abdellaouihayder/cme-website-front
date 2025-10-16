@@ -136,7 +136,8 @@ export default function AdminSettingsPage() {
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label>Weekly Updates</Label>
-                <p className="text-sm text-muted-foreground">Summary of the week's activities</p>
+                {/* ✅ FIXED HERE */}
+                <p className="text-sm text-muted-foreground">Summary of the week&apos;s activities</p>
               </div>
               <Switch defaultChecked />
             </div>
