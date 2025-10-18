@@ -6,10 +6,10 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Plus, Search, Edit, Trash2, Eye } from "lucide-react"
+import { Plus, Search, Edit, Trash2, Eye, X } from "lucide-react"
 
 // Mock data
-const sessions = [
+const initialSessions = [
   {
     id: 1,
     title: "Introduction to Robotics",
@@ -18,6 +18,7 @@ const sessions = [
     capacity: 30,
     enrolled: 25,
     level: "Beginner",
+    description: "Learn the basics of robotics and automation",
   },
   {
     id: 2,
@@ -27,6 +28,7 @@ const sessions = [
     capacity: 25,
     enrolled: 20,
     level: "Intermediate",
+    description: "Master advanced Arduino programming techniques",
   },
   {
     id: 3,
@@ -36,11 +38,68 @@ const sessions = [
     capacity: 20,
     enrolled: 15,
     level: "Beginner",
+    description: "Professional CAD design using SolidWorks",
   },
 ]
 
 export default function AdminSessionsPage() {
+  const [sessions, setSessions] = useState(initialSessions)
   const [searchQuery, setSearchQuery] = useState("")
+  const [showDialog, setShowDialog] = useState(false)
+  const [editDialog, setEditDialog] = useState(false)
+  const [deleteDialog, setDeleteDialog] = useState(false)
+  const [selectedSession, setSelectedSession] = useState(null)
+  const [formData, setFormData] = useState({
+    title: "",
+    date: "",
+    instructor: "",
+    capacity: "",
+    enrolled: "",
+    level: "Beginner",
+    description: "",
+  })
+
+  const handleShowClick = (session) => {
+    setSelectedSession(session)
+    setShowDialog(true)
+  }
+
+  const handleEditClick = (session) => {
+    setSelectedSession(session)
+    setFormData(session)
+    setEditDialog(true)
+  }
+
+  const handleDeleteClick = (session) => {
+    setSelectedSession(session)
+    setDeleteDialog(true)
+  }
+
+  const handleConfirmDelete = () => {
+    setSessions(sessions.filter((s) => s.id !== selectedSession.id))
+    setDeleteDialog(false)
+    setSelectedSession(null)
+  }
+
+  const handleEditSubmit = () => {
+    setSessions(sessions.map((s) => (s.id === selectedSession.id ? formData : s)))
+    setEditDialog(false)
+    setSelectedSession(null)
+  }
+
+  const handleFormChange = (e) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
+
+  const filteredSessions = sessions.filter(
+    (session) =>
+      session.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      session.instructor.toLowerCase().includes(searchQuery.toLowerCase()),
+  )
 
   return (
     <div className="space-y-6">
@@ -85,7 +144,7 @@ export default function AdminSessionsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {sessions.map((session) => (
+              {filteredSessions.map((session) => (
                 <TableRow key={session.id}>
                   <TableCell className="font-medium">{session.title}</TableCell>
                   <TableCell>{new Date(session.date).toLocaleDateString("en-US")}</TableCell>
@@ -109,13 +168,13 @@ export default function AdminSessionsPage() {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
-                      <Button variant="ghost" size="icon">
+                      <Button variant="ghost" size="icon" onClick={() => handleShowClick(session)}>
                         <Eye className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="icon">
+                      <Button variant="ghost" size="icon" onClick={() => handleEditClick(session)}>
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="icon">
+                      <Button variant="ghost" size="icon" onClick={() => handleDeleteClick(session)}>
                         <Trash2 className="h-4 w-4 text-destructive" />
                       </Button>
                     </div>
@@ -126,6 +185,164 @@ export default function AdminSessionsPage() {
           </Table>
         </CardContent>
       </Card>
+
+      {/* SHOW DIALOG */}
+      {showDialog && selectedSession && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <Card className="max-w-md w-full mx-4">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0">
+              <div>
+                <CardTitle>Session Details</CardTitle>
+              </div>
+              <Button variant="ghost" size="icon" onClick={() => setShowDialog(false)}>
+                <X className="h-4 w-4" />
+              </Button>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <p className="text-sm text-muted-foreground">Title</p>
+                <p className="font-medium">{selectedSession.title}</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Date</p>
+                <p className="font-medium">{new Date(selectedSession.date).toLocaleDateString("en-US")}</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Instructor</p>
+                <p className="font-medium">{selectedSession.instructor}</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Level</p>
+                <p className="font-medium">{selectedSession.level}</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Capacity</p>
+                <p className="font-medium">{selectedSession.capacity}</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Enrolled</p>
+                <p className="font-medium">{selectedSession.enrolled}</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Description</p>
+                <p className="font-medium">{selectedSession.description}</p>
+              </div>
+              <div className="flex justify-end pt-4">
+                <Button onClick={() => setShowDialog(false)}>Close</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* EDIT DIALOG */}
+      {editDialog && selectedSession && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <Card className="max-w-md w-full mx-4" style={{ maxHeight: '90vh', overflowY: 'auto' }}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0">
+              <div>
+                <CardTitle>Edit Session</CardTitle>
+              </div>
+              <Button variant="ghost" size="icon" onClick={() => setEditDialog(false)}>
+                <X className="h-4 w-4" />
+              </Button>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <label className="text-sm font-medium">Title</label>
+                <Input name="title" value={formData.title} onChange={handleFormChange} className="mt-1" />
+              </div>
+              <div>
+                <label className="text-sm font-medium">Date</label>
+                <Input type="date" name="date" value={formData.date} onChange={handleFormChange} className="mt-1" />
+              </div>
+              <div>
+                <label className="text-sm font-medium">Instructor</label>
+                <Input name="instructor" value={formData.instructor} onChange={handleFormChange} className="mt-1" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium">Capacity</label>
+                  <Input
+                    type="number"
+                    name="capacity"
+                    value={formData.capacity}
+                    onChange={handleFormChange}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium">Enrolled</label>
+                  <Input
+                    type="number"
+                    name="enrolled"
+                    value={formData.enrolled}
+                    onChange={handleFormChange}
+                    className="mt-1"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="text-sm font-medium">Level</label>
+                <select
+                  name="level"
+                  value={formData.level}
+                  onChange={handleFormChange}
+                  className="w-full mt-1 px-3 py-2 border border-input rounded-md"
+                >
+                  <option>Beginner</option>
+                  <option>Intermediate</option>
+                  <option>Advanced</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-sm font-medium">Description</label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleFormChange}
+                  rows={3}
+                  className="w-full mt-1 px-3 py-2 border border-input rounded-md"
+                />
+              </div>
+              <div className="flex justify-end gap-2 pt-4">
+                <Button variant="outline" onClick={() => setEditDialog(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleEditSubmit}>Save Changes</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* DELETE DIALOG */}
+      {deleteDialog && selectedSession && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <Card className="max-w-sm w-full mx-4">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0">
+              <div>
+                <CardTitle>Delete Session</CardTitle>
+              </div>
+              <Button variant="ghost" size="icon" onClick={() => setDeleteDialog(false)}>
+                <X className="h-4 w-4" />
+              </Button>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm">Are you sure you want to delete this session?</p>
+              <p className="text-sm font-medium">"{selectedSession.title}"</p>
+              <div className="flex justify-end gap-2 pt-4">
+                <Button variant="outline" onClick={() => setDeleteDialog(false)}>
+                  Cancel
+                </Button>
+                <Button variant="destructive" onClick={handleConfirmDelete}>
+                  Delete
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   )
 }
